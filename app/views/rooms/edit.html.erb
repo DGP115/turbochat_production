@@ -1,0 +1,25 @@
+<div class="container row justify-content-center col-12">
+
+  <%= form_with(model: @room, local: true, class: 'shadow p-3 mb-3 mt-4 bg-grey rounded') do |f| %>
+    <div class="form-group row">
+      <%= f.label :name, "Room name:", class: "col-2 col-form-label" %>
+      <div class="col-4">
+        <%= f.text_field :name, class: "form-control shadow rounded" %>
+      </div>
+    </div>
+
+    <div class="form-group row mt-2">
+      <%= f.label :description, "Description:", class: "col-2 col-form-label" %>
+      <div class="col-8">
+        <%= f.text_field :description, class: "form-control shadow rounded",
+                          autocomplete: 'off',
+                          placeholder: "Enter a description of room topic or participants" %>
+      </div>
+    </div>
+
+    <div class="mt-2 text-center">
+      <%= f.submit %>
+    </div>
+
+  <% end %>
+</div>

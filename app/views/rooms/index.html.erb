@@ -1,0 +1,67 @@
+<h2>Chat Room Index</h2>
+
+<%= turbo_frame_tag 'user_status_appearance_channel' %>
+<div id='user_status_appearance_channel'></div>
+
+<div id="chatroom_container" class="row bg-dark text-light">
+  <div id="side_panel" class="col-md-4 col-sm-4">
+    <h5 class="text-warning"> You:  </h5>
+    <li class="list-group-item d-flex align-items-center justify-content-between
+               user_list_item">
+      <div class="status-icon-container">
+        <%= link_to image_tag(current_user.chat_avatar, class: 'chat_profile_picture'),
+                    current_user %>
+
+        <%= turbo_stream_from 'user_status' %>
+
+        <div>
+          <%= render 'users/status', user: current_user %>
+        </div>
+
+      </div>
+
+      <div class="ms-2 me-auto username">
+        <%= current_user.username %>
+      </div>
+
+    </li>
+
+    <h5 class="mt-2"> Users: </h5>
+    <%= turbo_stream_from 'users' %>
+    <div id="users">
+      <%= render @users %>
+    </div>
+
+    <h5 class="mt-2"> Rooms: </h5>
+    <%= render 'rooms/new_room' %>
+    <%= turbo_stream_from 'rooms' %>
+    <div id="rooms">
+      <%= render @rooms %>
+    </div>
+
+  </div>
+
+  <div id="room_container" class="col-md-8 col-sm-8 bg-dark text-light">
+
+    <% if @current_room %>
+      <div id="current_room">
+
+        <h4 class="text-center"> <%= @user&.username || @current_room.name %> </h4>
+
+        <%= turbo_stream_from @current_room %>
+
+        <div id="messages" data-controller="scroll">
+          <%= turbo_frame_tag "page_handler" %>
+          <%= render "messages/pager", pagy: @pagy %>
+          <div id="messages-container">
+            <%= render @messages %>
+          </div>
+        </div>
+
+        <%= render 'messages/new_message_form' %>
+
+      </div>
+    <% end %>
+  </div>
+
+</div>

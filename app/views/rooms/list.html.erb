@@ -1,0 +1,19 @@
+<h5 class="mt-2 bi bi-person-rolodex">  Current Rooms:</h5>
+<div class="table-responsive">
+  <table class="table table-bordered table-secondary w-auto">
+    <thead>
+      <tr class="table table-dark ">
+        <th class="w-25">Name</th>
+        <th class="w-25">Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @public_rooms.each do |room| %>
+        <tr>
+          <td class="table-primary px-4"><%= link_to room.name, edit_room_path(room), class: "link-dark" %></td>
+          <td class="table-primary px-4"><%= room.description %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

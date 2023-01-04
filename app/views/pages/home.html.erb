@@ -1,0 +1,13 @@
+<h1>Welcome to TurboChat</h1>
+
+<% if current_user %>
+  <h6>You are logged in as:  </h6>
+  <%= image_tag(current_user.avatar_thumbnail) %> <%= current_user.username %><br>
+  <%= link_to '  Start Chatting...', rooms_path,
+      class: 'bi bi-chat-square-dots btn btn-secondary btn-lg mt-2' %>
+
+<% else %>
+  <%= link_to 'Login', new_user_session_path, class: 'btn btn-primary mt-2 btn-lg' %>
+  <%= link_to '  Signup!', new_user_registration_path,
+              class: 'bi bi-pen mt-2 btn btn-success btn-lg' %>
+<% end %>

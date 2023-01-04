@@ -1,0 +1,68 @@
+<h5>Rooms Administration </h5>
+<h5 class="mt-2 bi bi-person-rolodex">  Current Public Rooms:</h5>
+<div class="table-responsive">
+  <table class="table table-bordered table-secondary w-auto">
+    <thead>
+      <tr class="table table-dark text-center">
+        <th class="w-25">Name</th>
+        <th class="w-25">Description</th>
+        <th class="w-25">Message Count</th>
+        <th class="w-25">Admin Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @public_rooms.each do |room| %>
+        <tr>
+          <td class="table-primary px-4"><%= link_to room.name, edit_room_path(room), class: "link-dark" %></td>
+          <td class="table-primary px-4"><%= room.description %></td>
+          <td class="table-primary px-4 text-center"><%= room.messages.count %></td>
+          <td class="table-primary px-4 text-center">
+            <%= link_to 'Delete', room_path(room),
+                            class:"btn btn-warning",
+                            data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+
+<% if @private_rooms %>
+  <h5 class="mt-2 bi bi-person-rolodex">
+    Current Private Rooms:
+  </h5>
+  <div class="table-responsive">
+    <table class="table table-bordered table-secondary w-auto">
+      <thead>
+        <tr class="table table-dark text-center">
+          <th class="w-25">Name</th>
+          <th class="w-25">Participants</th>
+          <th class="w-25">Message Count</th>
+          <th class="w-25">Admin Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @private_rooms.each do |priv_room| %>
+          <tr>
+            <td class="table-primary px-4"><%= link_to priv_room.name, edit_room_path(priv_room), class: "link-dark" %></td>
+            <td class="table-primary px-4">
+
+              <% @participants.where(room_id: priv_room.id).each do |participant| %>
+                <% user = User.find(participant.user_id) %>
+                <%= user.username %>
+              <% end %>
+
+            </td>
+            <td class="table-primary px-4 text-center"><%= priv_room.messages.count %></td>
+            <td class="table-primary px-4 text-center">
+              <%= link_to 'Delete', room_path(priv_room),
+                              class:"btn btn-warning",
+                              data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
