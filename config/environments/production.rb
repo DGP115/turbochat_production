@@ -6,6 +6,25 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
+  config.active.storage.service = :digitalocean
+  config.active.storage.variant.processor = :minimagick
+
+  # If a default host is explicitly defined, then it is used; otherwise,
+  # the app is assumed to be a heroku review app.
+  # Note that Hash#fetch is used defensivley so the app will crash at boot-time
+  # if both 'DEFAULT_URL_HOST' and 'HEROKU_APP_NAME' aren't defined
+  #   Note host is set to a heroku environment variable
+  host = ENV['DEFAULT_URL_HOST'] || "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+  #  If force_ssl is true set protocol to https else set to http
+  protocol = config.force_ssl ? 'https' : 'http'
+
+  #  This setting is to fix the fact that images won't be displayed the first time they are placed
+  #  on a page
+  config.action_controller.default_url_options = {
+    host: host,
+    protocol: protocol
+  }
+
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers
   # and those relying on copy on write to perform better.
@@ -38,7 +57,9 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = "X-Accel-Redirect" # for NGINX
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # ---------------------------
+  # config.active_storage.service = :local
+  # ---------------------------
 
   # Mount Action Cable outside main process or domain.
   # config.action_cable.mount_path = nil
