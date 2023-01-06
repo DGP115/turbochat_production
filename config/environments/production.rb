@@ -6,8 +6,8 @@ Rails.application.configure do
   # Code is not reloaded between requests.
   config.cache_classes = true
 
-  config.active.storage.service = :digitalocean
-  config.active.storage.variant.processor = :minimagick
+  config.active_storage.service = :digitalocean
+  config.active_storage.variant_processor = :mini_magick
 
   # If a default host is explicitly defined, then it is used; otherwise,
   # the app is assumed to be a heroku review app.
