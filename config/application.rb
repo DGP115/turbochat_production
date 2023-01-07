@@ -17,9 +17,9 @@ module Turbochat
     #  When the Rails server starts, set the status of all users to offline.
     #  This is not a good place for this code because it can't run until database migrations
     #  have occured.
-    # config.after_initialize do |_config|
-    #   User.update_all(status: User.statuses[:offline])
-    # end
+    config.after_initialize do |_config|
+      User.update_all(status: User.statuses[:offline])
+    end
 
     # Configuration for the application, engines, and railties goes here.
     #
