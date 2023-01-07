@@ -46,7 +46,13 @@
     <% if @current_room %>
       <div id="current_room">
 
-        <h4 class="text-center"> <%= @user&.username || @current_room.name %> </h4>
+        <h4 class="text-center">
+          <% if @user %>
+            Private chat with:  <%= @user.username %>
+          <% else %>
+            Chatting in Room:  <%= @current_room.name %>
+          <% end %>
+        </h4>
 
         <%= turbo_stream_from @current_room %>
 
