@@ -45,7 +45,7 @@
 
     <% if @current_room %>
       <div id="current_room">
-<%= debugger %>
+
         <h4 class="text-center"> <%= @user&.username || @current_room.name %> </h4>
 
         <%= turbo_stream_from @current_room %>
