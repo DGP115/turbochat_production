@@ -5,10 +5,13 @@
 
     <div id="attachment-previews" data-controller="message-preview"
                                   data-action="message-preview#preview"
-                                  class="d-none">
+                                  >
     </div>
 
     <div class="image-upload">
+      <label for="message_attachments">
+        <i class="bi bi-plus-circle upload-button"></i>
+      </label>
 
       <%= f.file_field(:attachments, multiple: true,
                         data:{ controller: "message-preview",

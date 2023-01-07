@@ -1,9 +1,9 @@
 .image-upload > input {
-  display: flex;
+  display: none;
 }
 .upload-button {
   padding: 10px;
-  font-size: 15px;
+  font-size: 25px;
 }
 .upload-button:hover {
   cursor: pointer;
