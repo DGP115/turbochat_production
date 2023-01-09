@@ -89,12 +89,14 @@ consumer.subscriptions.create("UserStatusAppearanceChannel", {
     // Timer is used to define the duration of inactivity in order to assume the user is away
     this.uninstall();
     const shouldRun = document.getElementById('user_status_appearance_channel');
+
     if (!!shouldRun) {
       this.online();
       clearTimeout(timer);
-      const timeInSeconds = 30;
-      const milliseconds = 1000;
-      const timeInMilliseconds = timeInSeconds * milliseconds;
+      const numberOfMinutes = 5;
+
+      const timeInSeconds = numberOfMinutes * 60;
+      const timeInMilliseconds = timeInSeconds * 1000;
 
       timer = setTimeout(this.away.bind(this), timeInMilliseconds);
 

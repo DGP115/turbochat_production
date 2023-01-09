@@ -1,0 +1,13 @@
+<% if current_user.has_joined_room(room) %>
+
+  <%= link_to leave_room_path(room), method: :delete, data: {turbo: "false"}  do %>
+    <i class="bi bi-x-octagon-fill room-leave-link-icon"></i>
+  <% end %>
+
+<% else %>
+
+  <%= link_to join_room_path(room), data: {turbo: "false"} do %>
+   <i class="bi bi-door-open-fill room-join-link-icon"></i>
+  <% end %>
+
+<% end %>

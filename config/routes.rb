@@ -12,15 +12,22 @@ Rails.application.routes.draw do
     sessions: 'users/sessions',
     registrations: 'users/registrations'
   }
+  # Custom routes for users
+  get 'user/:id', to: 'users#show', as: 'user'
 
   # Routes for Rooms
   resources :rooms do
     resources :messages
+    #  This is cool.  Recall that the search of rooms may return a colleciton of rooms.
+    #  This statement tells rails how to route thet collection
+    collection do
+      post :search
+    end
   end
 
   get 'roomslist', to: 'rooms#list'
   get 'rooms_admin', to: 'rooms#admin'
-
-  # Custom routes for users
-  get 'user/:id', to: 'users#show', as: 'user'
+  # The as: here creates the path the way we want.  e.g. it creates join_room_path(room)
+  get 'rooms/join/:id', to: 'rooms#join', as: 'join_room'
+  get 'rooms/leave/:id', to: 'rooms#leave', as: 'leave_room'
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_04_160824) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_08_234609) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,15 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_04_160824) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "joinables", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["room_id"], name: "index_joinables_on_room_id"
+    t.index ["user_id"], name: "index_joinables_on_user_id"
+  end
+
   create_table "messages", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "room_id", null: false
@@ -67,6 +76,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_04_160824) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "description"
+    t.datetime "last_message_at"
   end
 
   create_table "users", force: :cascade do |t|
@@ -79,7 +89,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_04_160824) do
     t.datetime "updated_at", null: false
     t.string "username"
     t.integer "status", default: 0
-    t.boolean "admin"
+    t.integer "current_room"
+    t.integer "role"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
@@ -87,6 +98,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_04_160824) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "joinables", "rooms"
+  add_foreign_key "joinables", "users"
   add_foreign_key "messages", "rooms"
   add_foreign_key "messages", "users"
   add_foreign_key "participants", "rooms"

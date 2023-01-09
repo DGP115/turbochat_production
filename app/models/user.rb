@@ -15,10 +15,23 @@ class User < ApplicationRecord
   has_many :messages
   has_one_attached :avatar
 
+  #  "Joinables" is the association table for the many:many between rooms and users
+  has_many :joinables, dependent: :destroy
+  #  This statement could have been has_many : rooms, but to add a little
+  #  more detail:
+  #    We are naming the association "joined_rooms" and telling the model that
+  #    it is given by going through the joinables model [table] to get to the
+  #    "source" room model
+  has_many :joined_rooms, through: :joinables, source: :room
+
   enum status: %i[offline away online]
+  enum role: %i[general admin]
 
   after_commit :add_default_avatar, on: %i[create update]
+
+  after_initialize :set_default_role, if: :new_record?
   #
+  # -------------------------------------------------------------
   # Customization to have Devise use username as login
   attr_writer :login
 
@@ -44,6 +57,7 @@ class User < ApplicationRecord
       errors.add(:username, :invalid)
     end
   end
+  # -------------------------------------------------------------
 
   def avatar_thumbnail
     avatar.variant(resize_to_limit: [150, 150]).processed
@@ -70,6 +84,10 @@ class User < ApplicationRecord
     end
   end
 
+  def has_joined_room(room)
+    joined_rooms.include?(room)
+  end
+
   private
 
   def add_default_avatar
@@ -80,5 +98,10 @@ class User < ApplicationRecord
       filename: 'default_avatar.jpg',
       content_type: 'image/jpg'
     )
+  end
+
+  def set_default_role
+    #  If a role has not been set, set it to general
+    self.role ||= :general
   end
 end

@@ -32,11 +32,13 @@
       <%= render @users %>
     </div>
 
-    <h5 class="mt-2"> Rooms: </h5>
-    <%= render 'rooms/new_room' %>
+    <h5 class="mt-3"> Rooms: </h5>
     <%= turbo_stream_from 'rooms' %>
+    <%= render 'rooms/new_room' %>
+    <%= render 'rooms/search_form' %>
+
     <div id="rooms">
-      <%= render @rooms %>
+      <%= render 'rooms/rooms', rooms: @joined_rooms, user: current_user %>
     </div>
 
   </div>

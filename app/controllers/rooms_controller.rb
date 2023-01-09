@@ -2,13 +2,16 @@
 
 # Controller for chat rooms
 class RoomsController < ApplicationController
+  include RoomsHelper
   #  The authenticate_user! method comes from Devise
   before_action :authenticate_user!, except: %i[list]
   before_action :set_status
 
   def index
     @room = Room.new
-    @rooms = Room.public_rooms
+    @joined_rooms = current_user.joined_rooms.order(last_message_at: :desc)
+    @rooms = search_rooms
+
     @users = User.all_except(current_user)
 
     render 'index'
@@ -16,13 +19,15 @@ class RoomsController < ApplicationController
 
   def create
     @room = Room.create(whitelist_room_params)
+    redirect_to @room
   end
 
   def show
     @current_room = Room.find(params[:id])
 
     @room = Room.new
-    @rooms = Room.public_rooms
+    @joined_rooms = current_user.joined_rooms.order(last_message_at: :desc)
+    @rooms = search_rooms
 
     @message = Message.new
 
@@ -31,8 +36,9 @@ class RoomsController < ApplicationController
     #   2.  When pagy is called, two variables are returned:  @pagy and the messages to display
     #   Since pagy_messages is in descending order, the second statement below returns the 20 most
     #   recent messages
-    pagy_messages = @current_room.messages.order(created_at: :desc)
-    @pagy, messages = pagy(pagy_messages, items: 20)
+    pagy_messages = @current_room.messages.includes(:user, :attachments_attachments,
+                                            attachments_attachments: :blob).order(created_at: :desc)
+    @pagy, messages = pagy(pagy_messages, items: 10)
     #   3  Because we want to lopp through messages as message1, 2, 3, we have to reverse the order
     #      of "messages", above.  Put that reverse order in our @messages variable
     @messages = messages.reverse
@@ -90,6 +96,37 @@ class RoomsController < ApplicationController
     end
   end
 
+  def search
+    @rooms = search_rooms
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.update('search_results',
+                              partial: 'rooms/search_results',
+                              locals: { rooms: @rooms })
+        ]
+      end
+    end
+  end
+
+  def join
+    #  This method is invoked when a user selectes to join a room
+    #  So, get the room they identified and add it to their list of joined rooms
+    @room = Room.find(params[:id])
+    current_user.joined_rooms << @room
+    #  Then take the user to that room
+    redirect_to @room
+  end
+
+  def leave
+    #  This method is invoked when a user selectes to leave a room
+    #  So, get the room they identified and remove it from their list of joined rooms
+    @room = Room.find(params[:id])
+    current_user.joined_rooms.delete(@room)
+    #  Then take the user to the rooms index
+    redirect_to rooms_path
+  end
+
   private
 
   def set_room
@@ -101,6 +138,6 @@ class RoomsController < ApplicationController
   end
 
   def set_status
-    current_user&.update(status: User.statuses[:online])
+    current_user&.update!(status: User.statuses[:online])
   end
 end

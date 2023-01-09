@@ -2,6 +2,7 @@
 
 # Controller for app-specific, non-Devise user actions
 class UsersController < ApplicationController
+  include RoomsHelper
   # The below ensures that a user that is not logged in can't access user profiles
   # by entering routes directly in the browser address bar
   before_action :require_user, only: %i[edit update]
@@ -11,7 +12,8 @@ class UsersController < ApplicationController
     @users = User.all_except(current_user)
 
     @room = Room.new
-    @rooms = Room.public_rooms
+    @joined_rooms = current_user.joined_rooms
+    @rooms = search_rooms
 
     #   To enable direct chatting between two users:
     #   1.  Recall this Show action was invoked when a user clicked on another user's name in the
@@ -29,7 +31,7 @@ class UsersController < ApplicationController
     #   2.  When pagy is called, two variables are returned:  @pagy and the messages to display
     #   Since pagy_messages is in descending order, the second statement below returns the 20 most
     #   recent messages
-    pagy_messages = @current_room.messages.order(created_at: :desc)
+    pagy_messages = @current_room.messages.includes(:user).order(created_at: :desc)
     @pagy, messages = pagy(pagy_messages, items: 20)
     #   3  Because we want to lopp through messages as message1, 2, 3, we have to reverse the order
     #      of "messages", above.  Put that reverse order in our @messages variable

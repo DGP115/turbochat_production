@@ -1,0 +1,10 @@
+<%= form_with url: search_rooms_path, method: :post, id: 'room_search_form' do |f| %>
+  <%= f.search_field :name_search,
+                      class: 'room_search_field mt-2 mb-2',
+                      placeholder: 'Search for rooms to join...',
+                      data: { action: 'input->debounce#search' } %>
+<% end %>
+
+<div id="search_results">
+  <%= render 'rooms/search_results', rooms: @rooms %>
+</div>
