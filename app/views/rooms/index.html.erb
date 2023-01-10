@@ -1,5 +1,3 @@
-<h2>Chat Room Index</h2>
-
 <%= turbo_frame_tag 'user_status_appearance_channel' %>
 <div id='user_status_appearance_channel'></div>
 
@@ -38,6 +36,7 @@
     <%= render 'rooms/search_form' %>
 
     <div id="rooms">
+      <div class="room-container-heading">Rooms you have joined:</div>
       <%= render 'rooms/rooms', rooms: @joined_rooms, user: current_user %>
     </div>
 
