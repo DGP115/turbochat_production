@@ -76,3 +76,4 @@ end
 gem "devise", "~> 4.8"
 gem 'pagy', '~> 6.0'
 gem 'aws-sdk-s3', '~> 1.117', '>= 1.117.2'
+gem 'noticed', '~> 1.6'

@@ -18,6 +18,8 @@ class Room < ApplicationRecord
   #    "source" user model
   has_many :joined_users, through: :joinables, source: :user
 
+  has_noticed_notifications model_name: 'Notification'
+
   def broadcast_if_public
     broadcast_latest_message
   end

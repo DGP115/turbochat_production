@@ -15,6 +15,8 @@ class User < ApplicationRecord
   has_many :messages
   has_one_attached :avatar
 
+  has_many :notifications, as: :recipient, dependent: :destroy
+
   #  "Joinables" is the association table for the many:many between rooms and users
   has_many :joinables, dependent: :destroy
   #  This statement could have been has_many : rooms, but to add a little

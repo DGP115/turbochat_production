@@ -4,7 +4,12 @@
 
       <%= link_to room.name,
                   room_path(room, name_search: params[:name_search]),
-                  data: {turbo: 'false'}, class: 'ms-2 me-auto' %>
+                  data: {turbo: 'false'}, class: 'ms-2 me-auto mt-2' %>
+
+
+      <div class="room-name-notificiation-block">
+        <%= render 'rooms/notifications', room: room %>
+      </div>
 
       <%= render 'rooms/joinable_link', room: room %>
 

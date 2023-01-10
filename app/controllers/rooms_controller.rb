@@ -45,6 +45,8 @@ class RoomsController < ApplicationController
 
     @users = User.all_except(current_user)
 
+    set_notifications_to_read
+
     render 'index'
   end
 
@@ -139,5 +141,12 @@ class RoomsController < ApplicationController
 
   def set_status
     current_user&.update!(status: User.statuses[:online])
+  end
+
+  def set_notifications_to_read
+    #  Get all of the unread notifications in this room where the current user is the recipient
+    notifications = @current_room.notifications_as_room.where(recipient: current_user).unread
+    #  Set them to read
+    notifications.update_all(read_at: Time.zone.now)
   end
 end
